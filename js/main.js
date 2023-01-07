@@ -513,10 +513,25 @@ function createMap() {
     //----------------------------------------------------------------------------
 
     if (!map.getCenter()) {
-        map.zoomToExtent(
-            new OpenLayers.Bounds(7.1042, 50.7362, 7.1171, 50.7417).
-                transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject())
-        );
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position){
+                map.zoomToExtent(
+                    new OpenLayers.Bounds(position.coords.longitude-0.010, position.coords.latitude-0.010, position.coords.longitude+0.010, position.coords.latitude+0.010).
+                        transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject())
+                );
+            },
+            function(){
+                map.zoomToExtent(
+                    new OpenLayers.Bounds(7.1042, 50.7362, 7.1171, 50.7417).
+                        transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject())
+                );
+            });
+        }else{
+            map.zoomToExtent(
+                new OpenLayers.Bounds(7.1042, 50.7362, 7.1171, 50.7417).
+                    transform(new OpenLayers.Projection('EPSG:4326'), map.getProjectionObject())
+            );
+        }
     }
     /* }}} */
 
